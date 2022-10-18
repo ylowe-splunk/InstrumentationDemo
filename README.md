@@ -29,8 +29,19 @@ sudo yum update && sudo yum upgrade -y
 ```
 sudo yum install java -y && sudo yum install git -y
 ```
-3. Download the java app
-
+3. Download the java app from this repository, and navigate into the directory 
+```
+git clone https://github.com/ylowe-splunk/InstrumentationDemo.git
+cd InstrumentationDemo
+```
+4. Set execution permissions for the gradlew file
+```
+chmod +x gradlew
+```
+5. Build the application
+```
+./gradlew shadowJar
+```
 # Run
 
 ```
