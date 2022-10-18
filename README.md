@@ -155,7 +155,7 @@ Scrolling down to the precheck function, We can see that the wait time increases
 
 Now, we can save and close the code (```[esc] --> :wq```), and rerun the app
 ```
-cd ~/InsstrumentationDemo
+cd ~/InstrumentationDemo
 ```
 ```
 java -javaagent:"splunk-otel-javaagent.jar" \
