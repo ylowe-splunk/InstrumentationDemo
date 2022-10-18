@@ -9,7 +9,7 @@
 
 ### Setup
 Create an EC2 Account which is accessable via the internet
-1. Create a security group which allows inbound TCP traffic on ports 80, 22, and 9090 from anywhere (0.0.0.0/0)
+1. Create a security group which allows inbound TCP traffic on ports 80, 4317, 22, and 9090 from anywhere (0.0.0.0/0)
 2. Launch the wizard for creating an EC2 instance, and configure the following
 - Operating System: Amazon Linux 64-bit (x86)
 - Instance Type: t2.small (or larger instances, but I have found that t2.small works fine for me)
@@ -92,10 +92,16 @@ Lets set our service name as Integration Demo, our environment as workshop, and 
 - Kubernetes: No
 - Legacy Agent: No
 
-Now we just curl the Java agent, and run the application with the environment variables and the flags specified. I find it personally easier to define it all with flags, so I will use that command
+Now we just curl the Java agent
 
 ```
-java -javaagent:splunk-otel-javaagent-all.jar \
+curl -L https://github.com/signalfx/splunk-otel-java/releases/latest/download/splunk-otel-javaagent.jar -o splunk-otel-javaagent.jar
+```
+
+And run the application with the environment variables and the flags specified. I find it personally easier to define it all with flags, so I will use that command
+
+```
+java -javaagent:"splunk-otel-javaagent.jar" \
     -Dsplunk.profiler.enabled=true \
     -Dsplunk.profiler.memory.enabled=true \
     -Dsplunk.profiler.call.stack.interval=1000 \
@@ -104,7 +110,77 @@ java -javaagent:splunk-otel-javaagent-all.jar \
     -jar build/libs/profiling-workshop-all.jar
 ```
 
-the java agent, and run the application with the flags specified. Now, the app is written to run a monty hall game on port 9090, so lets go to that. I'll post the link in the chat, and please do go on and play like five to ten rounds - it'll help me generate data a little bit faster. But as we are doing that, lets open the floor up to any questions we may have so far
+Now, the app is written to run a monty hall game on port 9090, so lets go to that. 
+
+- Public IP:9090
+
+I'll post the link in the chat, and please do go on and play like five to ten rounds - it'll help me generate data a little bit faster. But as we are doing that, lets open the floor up to any questions we may have so far
+
+...
+
+Alright, so we've generated some traffic, and we also might have noticed that door 3 takes a lot more time to load than door 1 and 2. Keeping that in mind, lets look at the applications. 
+
+- Navigate to APM
+
+We can see our single service instrumented here, and some general metrics about latency and errors on the main page. 
+
+- Three white dots --> View Dashboard
+
+Digging in, we can look at the dashboard for our service, see application metrics, and then on the same page, also see the host metrics which we also just instrumented. If we want to look at traces, tags, and code profiling, we can choose to troubleshoot our time window. 
+
+- Three dots on any of the application metrics --> Troubleshoot this time window
+
+We can see our service here again, and then we can navigate to the right and see code profiling
+
+- Go to code profiling
+
+This is where we can see the callstack of what is going on in that node, as well as see application memory usage data. For Java, this manifests as heap memory usage, activity over time, and garbage collector activity. The flame graph is interactive, which lets us visually navigate the callstack in the case that we are looking for the root cause of any application errors
+
+We can also look at the callstack in relation to individual traces
+
+- Go back to the distributed graph, and click Traces. Find one with a duration of over 5 seconds
+
+Here, we can see the spans of each trace, and should see that the innermost span DoorGame.getOutcome is responsible for a slowdown. We can click into this span to gain more detail, and view our sampled call stacks
+
+In our case, we can quickly see that DoorChecker is called as we are getting the outcome of the game. but, that issues a precheck function that triggers a long series of sleep functions. We can view the other call stacks to verify that this is indeed the case for all call stacks. Once we know that every sample is held up in the same sleep call, we have a good lead for where we should start looking at our code.
+
+```
+cd ~/InstrumentationDemo/src/main/java/com/splunk/profiling/workshop
+```
+```
+vim DoorChecker.java
+```
+
+Scrolling down to the precheck function, We can see that the wait time increases exponentially to the index of the door, which means that door 3 is going to be much slower than door one. We dont want this feature, so we can just change this to `sleep(300)`
+
+Now, we can save and close the code (```[esc] --> :wq```), and rerun the app
+```
+cd ~/InsstrumentationDemo
+```
+```
+java -javaagent:"splunk-otel-javaagent.jar" \
+    -Dsplunk.profiler.enabled=true \
+    -Dsplunk.profiler.memory.enabled=true \
+    -Dsplunk.profiler.call.stack.interval=1000 \
+    -Dotel.resource.attributes=deployment.environment=workshop \
+    -Dotel.service.name=IntegrationDemo-YL \
+    -jar build/libs/profiling-workshop-all.jar
+```
+and we should see that the latency with door 3 is now gone. 
+
+So in a nutshell, we wanted to see a tool that can easily get insight into your environment, and we saw how Splunk does that. We saw how easy it is to set up, the out of the box metrics it comes with, and how it is able to provide a clear view into an environment by coorelating both infrastructure and application data. Then we looked at how we can dig deeper into that application code, and saw how code profiling can collect stacktrace and memory data, and speed up the debugging process by coorelating issues such as errors or latency with code insights.
+
+
+### Transition to Backend Demo
+Now, all this is great for getting insight on a single instance, but a key differentiator for Splunk's platform is how we do root cause analysis in a distributed environment, which we will take a look at now. Before we do though, let's take a quick pause for any questions. 
+
+
+
+
+
+
+
+
 
 
 
