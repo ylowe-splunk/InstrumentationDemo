@@ -76,7 +76,37 @@ This instrumentation works for applications too - we are able to do everything f
 
 ...
 
-Okay, so lets say I want to instrument a simple standalone java application. All we need to do is curl the java agent, and run the application with the flags specified. Now, the app is written to run a monty hall game on port 9090, so lets go to that. I'll post the link in the chat, and please do go on and play like five to ten rounds - it'll help me generate data a little bit faster. But as we are doing that, lets open the floor up to any questions we may have so far
+- Switch back to the terminal
+
+Okay, so lets say I want to instrument a simple standalone Java application. All we need to do is go to data manager and add a Java application monitor
+
+- Data management --> Add integration --> Sort by use case --> Monitor applications --> Java (traces)
+
+Lets set our service name as Integration Demo, our environment as workshop, and we will enable code profiling and application metrics
+
+- Service Name: IntegrationDemo-\[INITIALS\]
+- Collector Endpoint: http://localhost:4317
+- Environment: Workshop-\[INITIALS\]
+- AlwaysOn Profiling: CPU and memory profiling
+- Application Metrics: Yes
+- Kubernetes: No
+- Legacy Agent: No
+
+Now we just curl the Java agent, and run the application with the environment variables and the flags specified. I find it personally easier to define it all with flags, so I will use that command
+
+```
+java -javaagent:splunk-otel-javaagent-all.jar \
+    -Dsplunk.profiler.enabled=true \
+    -Dsplunk.profiler.memory.enabled=true \
+    -Dsplunk.profiler.call.stack.interval=1000 \
+    -Dotel.resource.attributes=deployment.environment=workshop \
+    -Dotel.service.name=IntegrationDemo-YL \
+    -jar build/libs/profiling-workshop-all.jar
+```
+
+the java agent, and run the application with the flags specified. Now, the app is written to run a monty hall game on port 9090, so lets go to that. I'll post the link in the chat, and please do go on and play like five to ten rounds - it'll help me generate data a little bit faster. But as we are doing that, lets open the floor up to any questions we may have so far
+
+
 
 
 
