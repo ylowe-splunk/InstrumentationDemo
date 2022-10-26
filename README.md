@@ -1,12 +1,22 @@
 # IM and APM Instrumentation Demo
 
-## Requirements
+<br>
+
+<div align="center"> <h2> Requirements </h2></div>
+
+<br>
+
 1. AWS Account
 2. Access to the [playground environment in us0](https://app.signalfx.com/#/home)
 3. Access to a set up [sfdemo backend demo](https://docs.google.com/document/d/1ldNG7qC5xUBNXA6NP9S5ueTihYBlBE57ZsEReZD80dQ/edit)
 
-## Setup
-#### 1. Create an EC2 Account which is accessable via the internet
+<br>
+
+<div align="center"> <h2> Setup </h2></div>
+
+<br>
+
+### 1. Create an EC2 Account which is accessable via the internet
 
 - [Create a security group](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html#working-with-security-groups) which allows inbound TCP traffic on ports 80, 4317, 22, and 9090 from anywhere (0.0.0.0/0) 
 - Launch the wizard for creating an EC2 instance, and configure the following <br><br>
@@ -28,8 +38,9 @@
 
 - Launch the instance, and once it is launched, connect to it via ssh. Note the instance ID and the public IP, as we will need it later
 
-<br><br>
-#### 2. Install and set up the application we will instrument
+<br>
+
+### 2. Install and set up the application we will instrument
 - Update and upgrade yum
 ```
 sudo yum update -y && sudo yum upgrade -y
@@ -53,8 +64,9 @@ chmod +x gradlew
 ```
 ./gradlew shadowJar
 ```
-<br><br>
-#### 3. [OPTIONAL] Prepare transition 
+<br>
+
+### 3. [OPTIONAL] Prepare transition 
 - If you plan on transitioning to the backend demo, make sure you have [deployed the backend scripts for sfdemo](https://docs.google.com/document/d/1ldNG7qC5xUBNXA6NP9S5ueTihYBlBE57ZsEReZD80dQ/edit)
 <br><br><br>
 
@@ -108,22 +120,27 @@ This instrumentation works for applications too - we are able to do everything f
 
 <br>
 
-Okay, so lets say I want to instrument a simple standalone Java application. All we need to do is go to data manager and add a Java application monitor
+Okay, so lets say I want to instrument a simple standalone Java application. All we need to do is go to data manager, add a Java application monitor, and walk through the steps
 
 <br>
 
-> Navigate to the [applications page](https://app.signalfx.com/#/integrations/data-type/traces) for new integrations. Click on the card for [Java integration (traces)](https://app.signalfx.com/#/gdi/scripted/java-tracing/step-1?category=data-type-traces&gdiState=%7B%22integrationId%22:%22java-tracing%22%7D)
-<br>
+> Navigate to the [applications page](https://app.signalfx.com/#/integrations/data-type/traces) for new integrations. Click on the card for [Java integration (traces)](https://app.signalfx.com/#/gdi/scripted/java-tracing/step-1?category=data-type-traces&gdiState=%7B%22integrationId%22:%22java-tracing%22%7D). Set the values as follows: 
 
-Lets set our service name as Integration Demo, our environment as workshop, and we will enable code profiling and application metrics
+<div align="center">
+            
+| Config              | Value                        |
+|---------------------|------------------------------|
+| Service Name        | IntegrationDemo-\[INITIALS\] |
+| Collector Endpoint  | http://localhost:4317        |
+| Environment         | Workshop-\[INITIALS\]        |
+| AlwaysOn Profiling  | CPU and memory profiling     |
+| Application Metrics | Yes                          |
+| Kubernetes          | Yes                          |
+| Legacy Agent        | No                           |
 
-- Service Name: IntegrationDemo-\[INITIALS\]
-- Collector Endpoint: http://localhost:4317
-- Environment: Workshop-\[INITIALS\]
-- AlwaysOn Profiling: CPU and memory profiling
-- Application Metrics: Yes
-- Kubernetes: No
-- Legacy Agent: No
+</div>
+
+
 
 Now we just curl the Java agent
 
