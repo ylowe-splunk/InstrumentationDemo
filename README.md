@@ -144,9 +144,14 @@ Okay, so lets say I want to instrument a simple standalone Java application. All
 
 Now we just curl the Java agent
 
+<br>
+
+> Ensure you are in `InstrumentationDemo` directory, and run the following
 ```
 curl -L https://github.com/signalfx/splunk-otel-java/releases/latest/download/splunk-otel-javaagent.jar -o splunk-otel-javaagent.jar
 ```
+
+<br>
 
 And run the application with the environment variables and the flags specified. I find it personally easier to define it all with flags, so I will use that command
 
@@ -162,19 +167,35 @@ java -javaagent:"splunk-otel-javaagent.jar" \
 
 Now, the app is written to run a monty hall game on port 9090, so lets go to that. 
 
-- Public IP:9090
+<br>
+
+> The app is hosted on [Public IP]:9090
+
+<br>
 
 I'll post the link in the chat, and please do go on and play like five to ten rounds - it'll help me generate data a little bit faster. But as we are doing that, lets open the floor up to any questions we may have so far
 
-...
+<br>
+
+> Spend around 5-10 minutes generating traces and answering questions
+
+<br>
 
 Alright, so we've generated some traffic, and we also might have noticed that door 3 takes a lot more time to load than door 1 and 2. Keeping that in mind, lets look at the applications. 
 
-- Navigate to APM
+<br>
+
+> Navigate to [APM](https://app.signalfx.com/#/apm) and ensure you are in the right environment
+
+<br>
 
 We can see our single service instrumented here, and some general metrics about latency and errors on the main page. 
 
-- Three white dots --> View Dashboard
+<br>
+
+> Click on the three white dots to the right of the service, and click View Dashboard
+
+<br>
 
 Digging in, we can look at the dashboard for our service, see application metrics, and then on the same page, also see the host metrics which we also just instrumented. If we want to look at traces, tags, and code profiling, we can choose to troubleshoot our time window. 
 
