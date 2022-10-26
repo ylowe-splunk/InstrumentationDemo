@@ -86,19 +86,34 @@ Now that it is installed, we can grab our AWS Unique ID and navigate to our plat
 
 Out of the box, we have all of these dashboards built out by default. These dashboards are malleable, and you can also easily edit the charts that make up the dashboards. Now based on some of the charts, we can tell this is an aggregate dashboard, which we can see to great effect once we loop in other instances.
 
-- Switch to the other EC2 tab to show the aggregate instances and every chart filled out. Then, switch back to the tab with the filter
+<br>
+
+> Switch to the other [EC2](https://app.signalfx.com/#/infra/entity/AWS%20instances?groupBy=aws_region&endTime=now&startTime=-3h) tab to show the aggregate instances and every chart filled out. Then, switch back to the tab with the filter
+
+<br>
 
 We can click into our instance name also, to see our metadata and to see more specific charts that pertain directly to our instance. 
 
+<br>
+
+> Click on the instance name, and point out the metadata as well as the individual dashboards
+
+<br>
+
 This instrumentation works for applications too - we are able to do everything form grabbing application metrics, coorelating it with the host, to collecting stacktrace data and application memory usage over time. But before I do that, are there any questions about infrastructure monitoirng?
 
-...
+<br>
 
-- Switch back to the terminal
+> Allocate around 5 minutes for questions, and then switch back to the terminal
+
+<br>
 
 Okay, so lets say I want to instrument a simple standalone Java application. All we need to do is go to data manager and add a Java application monitor
 
-- Data management --> Add integration --> Sort by use case --> Monitor applications --> Java (traces)
+<br>
+
+> Navigate to the [applications page](https://app.signalfx.com/#/integrations/data-type/traces) for new integrations. Click on the card for [Java integration (traces)](https://app.signalfx.com/#/gdi/scripted/java-tracing/step-1?category=data-type-traces&gdiState=%7B%22integrationId%22:%22java-tracing%22%7D)
+<br>
 
 Lets set our service name as Integration Demo, our environment as workshop, and we will enable code profiling and application metrics
 
