@@ -6,10 +6,10 @@
 3. Access to a set up [sfdemo backend demo](https://docs.google.com/document/d/1ldNG7qC5xUBNXA6NP9S5ueTihYBlBE57ZsEReZD80dQ/edit)
 
 ## Setup
-#### Create an EC2 Account which is accessable via the internet
-<ol>
-<li>[Create a security group](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html#working-with-security-groups) which allows inbound TCP traffic on ports 80, 4317, 22, and 9090 from anywhere (0.0.0.0/0) </li>
-<li>Launch the wizard for creating an EC2 instance, and configure the following <br><br>
+#### 1. Create an EC2 Account which is accessable via the internet
+
+- [Create a security group](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html#working-with-security-groups) which allows inbound TCP traffic on ports 80, 4317, 22, and 9090 from anywhere (0.0.0.0/0) 
+- Launch the wizard for creating an EC2 instance, and configure the following <br><br>
 
 <div align="center">
             
@@ -24,41 +24,44 @@
 | Security Group        | Select the security group you just created               |
 | Storage               | Keep as default                                          |
 
-</div> </li>
-<li>Launch the instance, and once it is launched, connect to it via ssh. Note the instance ID and the public IP, as we will need it later </li>
-</ol>
+</div>
 
-Install and set up the application we will instrument
-1. Update and upgrade yum
+- Launch the instance, and once it is launched, connect to it via ssh. Note the instance ID and the public IP, as we will need it later
+
+<br><br>
+#### 2. Install and set up the application we will instrument
+- Update and upgrade yum
 ```
 sudo yum update -y && sudo yum upgrade -y
 ```
-2. Install java and git
+- Install java and git
 ```
 sudo yum install java -y && sudo yum install git -y
 ```
-3. Download the java app from this repository, and navigate into the directory 
+- Download the java app from this repository, and navigate into the directory 
 ```
 git clone https://github.com/ylowe-splunk/InstrumentationDemo.git
 ```
 ```
 cd InstrumentationDemo
 ```
-4. Set execution permissions for the gradlew file
+- Set execution permissions for the gradlew file
 ```
 chmod +x gradlew
 ```
-5. Build the application
+- Build the application
 ```
 ./gradlew shadowJar
 ```
+<br><br>
+#### 3. [OPTIONAL] Prepare transition 
+- If you plan on transitioning to the backend demo, make sure you have [deployed the backend scripts for sfdemo](https://docs.google.com/document/d/1ldNG7qC5xUBNXA6NP9S5ueTihYBlBE57ZsEReZD80dQ/edit)
+<br><br><br>
 
-Deploy the backend scripts for sfdemo
+## Talk Track
+I understand that having a short implementation time, out of the box metrics, and being able to do root cause analysis are all important technical qualifiers for Splunk. My objective today is to show this by instrumenting a blank EC2 instance, which I have installed a basic java app on. 
 
-### Talk Track
-I understand that having a short implementation time, out of the box metrics, and being able to do root cause analysis are all important technical qualifiers for Splunk. My objective today is to show that, via instrumenting a blank EC2 instance, which I have installed a basic java app on. 
-
-Our goal first is to integrate with metrics. To do that we just go to our integration page, add integration, click Linux, and follow the steps to download the collector. We will specify our access token (Default_2022), keep it in agent mode, and keep log collection. Now, we just run
+Our goal first is to integrate with metrics. To do that we just go to our integration page, add integration, click Linux, and follow the steps to download the collector. We will specify our access token (Default_2022), keep it in agent mode, and keep log collection. Now, we can switch to our machine and run the script to curl and install the collector
 
 ```
 curl -sSL https://dl.signalfx.com/splunk-otel-collector.sh > /tmp/splunk-otel-collector.sh && \
@@ -67,11 +70,19 @@ sudo sh /tmp/splunk-otel-collector.sh --realm us0 -- kzD15S9Cr9aTHhWgMQEeeA --mo
 
 And our collector shoud now be installing. This process can be very easily automated either via custom scripts or terraform. As I mentioned before, Splunk utilizes our own fork of the otel collector, which has some defaults built into the configuration file that makes integrating with our cloud platform easier. That said, most of the automatic and manual integration steps listed on the opentelemetry website should still work with our collector. Now as the collector installs, lets open the floor to any questions we might have up until now.  
 
-...
+<br>
+
+> Allocate at most five minutes for questions - the collector usually does not take longer than that
+> 
+<br>
 
 Now that it is installed, we can grab our AWS Unique ID and navigate to our platform. 
 
-- Infrastructure Monitoring --> open two tabs of EC2, on one of them, filter for AWSUniqueId = Instance ID
+<br>
+
+> Go to [Infrastructure Monitoring](https://app.signalfx.com/#/infra?endTime=now&startTime=-3h), and open two tabs of [EC2](https://app.signalfx.com/#/infra/entity/AWS%20instances?groupBy=aws_region&endTime=now&startTime=-3h). On one of them, add a filter for `AWSUniqueId = Instance ID`
+> 
+<br>
 
 Out of the box, we have all of these dashboards built out by default. These dashboards are malleable, and you can also easily edit the charts that make up the dashboards. Now based on some of the charts, we can tell this is an aggregate dashboard, which we can see to great effect once we loop in other instances.
 
