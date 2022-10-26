@@ -1,25 +1,32 @@
 # IM and APM Instrumentation Demo
 
-### Abstract
-
-### Requirements
+## Requirements
 1. AWS Account
-2. Access to the playground environment in us0
-3. Access to a set up sfdemo backend demo
+2. Access to the [playground environment in us0](https://app.signalfx.com/#/home)
+3. Access to a set up [sfdemo backend demo](https://docs.google.com/document/d/1ldNG7qC5xUBNXA6NP9S5ueTihYBlBE57ZsEReZD80dQ/edit)
 
-### Setup
-Create an EC2 Account which is accessable via the internet
-1. Create a security group which allows inbound TCP traffic on ports 80, 4317, 22, and 9090 from anywhere (0.0.0.0/0)
-2. Launch the wizard for creating an EC2 instance, and configure the following
-- Operating System: Amazon Linux 64-bit (x86)
-- Instance Type: t2.small (or larger instances, but I have found that t2.small works fine for me)
-- Key Pair: Select your key pair, or create one if it does not exist. 
-- VPC: Default VPC, should be called aws-controltower-VPC
-- Subnet: Any default subnet of the VPC
-- Auto-assign public IP: Yes
-- Security Group: Select your existing security group we created 
-- Storage: Keep as default
-3. Launch the instance, and once it is launched, connect to it via ssh. Note the instance ID and the public IP, as we will need it later
+## Setup
+#### Create an EC2 Account which is accessable via the internet
+<ol>
+<li>[Create a security group](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html#working-with-security-groups) which allows inbound TCP traffic on ports 80, 4317, 22, and 9090 from anywhere (0.0.0.0/0) </li>
+<li>Launch the wizard for creating an EC2 instance, and configure the following <br><br>
+
+<div align="center">
+            
+| Config                | Value                                                    |
+|-----------------------|----------------------------------------------------------|
+| Operating System      | Amazon Linux 64-bit (x86)                                |
+| Instance Type         | t2.small (or larger)                                     |
+| Key Pair              | Select your key pair, or create one if it does not exist |
+| VPC                   | Default VPC, should be called aws-controltower-VPC       |
+| Subnet                | Any default subnet of the VPC                            |
+| Auto-assign public IP | Yes                                                      |
+| Security Group        | Select the security group you just created               |
+| Storage               | Keep as default                                          |
+
+</div> </li>
+<li>Launch the instance, and once it is launched, connect to it via ssh. Note the instance ID and the public IP, as we will need it later </li>
+</ol>
 
 Install and set up the application we will instrument
 1. Update and upgrade yum
