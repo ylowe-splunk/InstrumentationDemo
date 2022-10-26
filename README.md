@@ -146,7 +146,7 @@ Now we just curl the Java agent
 
 <br>
 
-> Ensure you are in `InstrumentationDemo` directory, and run the following
+> Ensure you are in InstrumentationDemo directory (`cd ~/InstrumentationDemo`), and run the following
 ```
 curl -L https://github.com/signalfx/splunk-otel-java/releases/latest/download/splunk-otel-javaagent.jar -o splunk-otel-javaagent.jar
 ```
@@ -199,28 +199,43 @@ We can see our single service instrumented here, and some general metrics about 
 
 Digging in, we can look at the dashboard for our service, see application metrics, and then on the same page, also see the host metrics which we also just instrumented. If we want to look at traces, tags, and code profiling, we can choose to troubleshoot our time window. 
 
-- Three dots on any of the application metrics --> Troubleshoot this time window
+<br>
+
+> Click on the three dots on any of the application metrics, and click Troubleshoot this time window
+
+<br>
 
 We can see our service here again, and then we can navigate to the right and see code profiling
 
-- Go to code profiling
+<br>
+
+> Go to code profiling
+
+<br>
 
 This is where we can see the callstack of what is going on in that node, as well as see application memory usage data. For Java, this manifests as heap memory usage, activity over time, and garbage collector activity. The flame graph is interactive, which lets us visually navigate the callstack in the case that we are looking for the root cause of any application errors
 
-We can also look at the callstack in relation to individual traces
+<br>
 
-- Go back to the distributed graph, and click Traces. Find one with a duration of over 5 seconds
+> Go back to the distributed graph, and click Traces. Find one with a duration of over 5 seconds
 
-Here, we can see the spans of each trace, and should see that the innermost span DoorGame.getOutcome is responsible for a slowdown. We can click into this span to gain more detail, and view our sampled call stacks
+<br>
+
+Here, we can see the spans of each trace, and should see that the innermost span `DoorGame.getOutcome` is responsible for a slowdown. We can click into this span to gain more detail, and view our sampled call stacks
 
 In our case, we can quickly see that DoorChecker is called as we are getting the outcome of the game. but, that issues a precheck function that triggers a long series of sleep functions. We can view the other call stacks to verify that this is indeed the case for all call stacks. Once we know that every sample is held up in the same sleep call, we have a good lead for where we should start looking at our code.
 
+<br>
+
+> Navigate to the source code and open `DoorChecker.java`
 ```
 cd ~/InstrumentationDemo/src/main/java/com/splunk/profiling/workshop
 ```
 ```
 vim DoorChecker.java
 ```
+
+<br>
 
 Scrolling down to the precheck function, We can see that the wait time increases exponentially to the index of the door, which means that door 3 is going to be much slower than door one. We dont want this feature, so we can just change this to `sleep(300)`
 
@@ -237,7 +252,7 @@ java -javaagent:"splunk-otel-javaagent.jar" \
     -Dotel.service.name=IntegrationDemo-YL \
     -jar build/libs/profiling-workshop-all.jar
 ```
-and we should see that the latency with door 3 is now gone. 
+and now we can navigate to [PUBLIC IP]:9090, and we should see that the latency with door 3 is now gone. 
 
 So in a nutshell, we wanted to see a tool that can easily get insight into your environment, and we saw how Splunk does that. We saw how easy it is to set up, the out of the box metrics it comes with, and how it is able to provide a clear view into an environment by coorelating both infrastructure and application data. Then we looked at how we can dig deeper into that application code, and saw how code profiling can collect stacktrace and memory data, and speed up the debugging process by coorelating issues such as errors or latency with code insights.
 
