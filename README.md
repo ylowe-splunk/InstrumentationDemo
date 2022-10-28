@@ -149,7 +149,7 @@ Okay, so lets say I want to instrument a simple standalone Java application. All
 | Environment         | Workshop-\[INITIALS\]        |
 | AlwaysOn Profiling  | CPU and memory profiling     |
 | Application Metrics | Yes                          |
-| Kubernetes          | Yes                          |
+| Kubernetes          | No                           |
 | Legacy Agent        | No                           |
 
 </div>
