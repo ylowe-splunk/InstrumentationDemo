@@ -8,7 +8,7 @@
 
 One of the most common questions and obstacles that SEs face during observability engagements is regarding the amount of work neccessary to set up the functionality of our demo. Walking thorugh the setup steps is often not enough to convince a customer that setup is that easy, and we are often asked to show an implementation demo. Another large obstacle we face is that we are often asked about our capabilities regarding single instance implementations. To solve both problems at once, I have will create a demo which walks through the intrumentation of a java application running on a basic EC2 instance, so that we can show a customer the precise steps it takes to set up our platform, as well as what metrics are avialable out of the box. This demo will cover basic IM integration, as well as APM code-profiling instrumentation, so we can showcase the capabilities that code profiling has on root cause analysis, even without a distributed environment. This will serve largely to showcase short implementation time, out of the box metrics, and being able to do root cause analysis.
 
-Source code taken from the Monty Hall Profiling Workshop, courtesy of Jason Plumb
+Source code taken from the [Monty Hall Profiling Workshop](https://github.com/signalfx/tracing-examples/tree/main/profiling/workshop), courtesy of Jason Plumb
 
 <br>
 
