@@ -78,7 +78,11 @@ chmod +x gradlew
 - If you plan on transitioning to the backend demo, make sure you have [deployed the backend scripts for sfdemo](https://docs.google.com/document/d/1ldNG7qC5xUBNXA6NP9S5ueTihYBlBE57ZsEReZD80dQ/edit)
 <br><br><br>
 
-## Talk Track
+<br>
+
+<div align="center"> <h2> Talk Track </h2></div>
+
+<br>
 I understand that having a short implementation time, out of the box metrics, and being able to do root cause analysis are all important technical qualifiers for Splunk. My objective today is to show this by instrumenting a blank EC2 instance, which I have installed a basic java app on. 
 
 Our goal first is to integrate with metrics. To do that we just go to our integration page, add integration, click Linux, and follow the steps to download the collector. We will specify our access token (Default_2022), keep it in agent mode, and keep log collection. Now, we can switch to our machine and run the script to curl and install the collector
