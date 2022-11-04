@@ -91,7 +91,7 @@ Our goal first is to integrate with metrics. To do that we just go to our integr
 
 ```
 curl -sSL https://dl.signalfx.com/splunk-otel-collector.sh > /tmp/splunk-otel-collector.sh && \
-sudo sh /tmp/splunk-otel-collector.sh --realm us0 -- kzD15S9Cr9aTHhWgMQEeeA --mode agent
+sudo sh /tmp/splunk-otel-collector.sh --realm us0 -- [TOKEN] --mode agent
 ```
 
 And our collector shoud now be installing. This process can be very easily automated either via custom scripts or terraform. As I mentioned before, Splunk utilizes our own fork of the otel collector, which has some defaults built into the configuration file that makes integrating with our cloud platform easier. That said, most of the automatic and manual integration steps listed on the opentelemetry website should still work with our collector. Now as the collector installs, lets open the floor to any questions we might have up until now.  
